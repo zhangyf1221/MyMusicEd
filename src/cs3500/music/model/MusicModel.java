@@ -16,13 +16,26 @@ public class MusicModel implements IMusicModel{
 
   public MusicModel() {
     this.music = new Music();
+    this.duration = 0;
+    this.highPitch = 0;
+    this.lowPitch = 0;
   }
 
 
 
   @Override
   public void add(Note note) throws IllegalArgumentException {
+    if (note.duration > duration) {
+      this.duration = note.duration;
+    }
 
+    if (note.pitch > highPitch) {
+      this.highPitch = note.pitch;
+    }
+
+    if (note.pitch < lowPitch) {
+      this.lowPitch = note.pitch;
+    }
   }
 
   @Override
@@ -31,7 +44,8 @@ public class MusicModel implements IMusicModel{
   }
 
   @Override
-  public void edit(Note note, int newStartTime, int newDuration, int newPitch, String newInstrument, int newVolume) throws IllegalArgumentException {
+  public void edit(Note note, int newStartTime, int newDuration, int newPitch,
+                   String newInstrument, int newVolume) throws IllegalArgumentException {
 
   }
 
@@ -48,5 +62,10 @@ public class MusicModel implements IMusicModel{
   @Override
   public void combineConsecutively(IMusicModel model) {
 
+  }
+
+  @Override
+  public String print() {
+    return "";
   }
 }

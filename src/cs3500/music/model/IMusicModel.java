@@ -56,5 +56,11 @@ public interface IMusicModel {
    */
   void combineConsecutively(IMusicModel model);
 
+  /**
+   * Print the music in String.
+   * @return String represents the music model
+   */
+  String print();
+
 
 }
