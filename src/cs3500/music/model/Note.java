@@ -16,10 +16,10 @@ final public class Note {
 
   Note(int startTime, int duration, int pitch, String instrument, int volume) {
     if (startTime < 0) {
-      throw new IllegalArgumentException("Starting time should greater or equal than 0.");
+      throw new IllegalArgumentException("Starting time should be greater than or equal to 0.");
     }
     if (duration <= 0) {
-      throw new IllegalArgumentException("Duration of a pitch should greater than 0.");
+      throw new IllegalArgumentException("Duration of a pitch should be greater than 0.");
     }
 
     this.startTime = startTime;
