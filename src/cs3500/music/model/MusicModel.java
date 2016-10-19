@@ -14,6 +14,10 @@ public class MusicModel implements IMusicModel{
   private int highPitch;
   private int lowPitch;
 
+  public MusicModel() {
+    this.music = new Music();
+  }
+
 
 
   @Override
