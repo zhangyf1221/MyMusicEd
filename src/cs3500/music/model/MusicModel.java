@@ -4,12 +4,16 @@ package cs3500.music.model;
  * Created by GentleFan on 10/18/2016.
  */
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
+
 /**
  * Represents the class of the music model.
  */
 public class MusicModel implements IMusicModel{
   //define fields
-  private Music music;
+  public Music music;
   private int duration;
   private int highPitch;
   private int lowPitch;
@@ -25,8 +29,8 @@ public class MusicModel implements IMusicModel{
 
   @Override
   public void add(Note note) throws IllegalArgumentException {
-    if (note.duration > duration) {
-      this.duration = note.duration;
+    if (note.duration + note.startTime > duration) {
+      this.duration = note.duration + note.startTime;
     }
 
     if (note.pitch > highPitch) {
@@ -35,6 +39,27 @@ public class MusicModel implements IMusicModel{
 
     if (note.pitch < lowPitch) {
       this.lowPitch = note.pitch;
+    }
+
+    for (int i = note.startTime; i < note.startTime + note.duration + 1; i++) {
+      TreeMap<Integer, List<Note>> pitches;
+      List<Note> lon;
+
+      if (music.notes.containsKey(i)) {
+        pitches = music.notes.get(i);
+        if (pitches.containsKey(note.pitch)) {
+          lon = pitches.get(note.pitch);
+        } else {
+          lon = new ArrayList<>();
+        }
+      } else {
+        pitches = new TreeMap<>();
+        lon = new ArrayList<>();
+      }
+
+      lon.add(note);
+      pitches.put(note.pitch, lon);
+      music.notes.put(i, pitches);
     }
   }
 
@@ -49,8 +74,13 @@ public class MusicModel implements IMusicModel{
 
   }
 
-  @Override
-  public Note get(int beat) throws IllegalArgumentException {
+  /**
+   * Return the note at given beat time.
+   * @param beat An integer represents the beat time in music
+   * @return A note object with starting time, duration, pitch, instrument and volume
+   * @throws IllegalArgumentException
+   */
+  private Note get(int beat) throws IllegalArgumentException {
     return null;
   }
 
@@ -66,6 +96,18 @@ public class MusicModel implements IMusicModel{
 
   @Override
   public String print() {
-    return "";
+    String result = "";
+    if (music == null) {
+      return "No note in music";
+    }
+
+    String space = "";
+    for (int i = 0; i < (int)Math.log10(duration) + 1; i++) {
+      space += " ";
+    }
+
+    //first line
+
   }
+
 }

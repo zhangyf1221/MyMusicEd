@@ -25,24 +25,13 @@ public interface IMusicModel {
 
   /**
    * Edit the given note with given parameters.
+   * @param beat An integer represents the time of note need to be edited
+   * @param pitch An integer represents the pitch the note need to be edited
    * @param note A note object with starting time, duration, pitch, instrument and volume
-   * @param newStartTime An integer represents the start time of the new note
-   * @param newDuration An integer represents the duration of the new note
-   * @param newPitch An integer represents the pitch time of the new note
-   * @param newInstrument A String represents the instrument of the new note
-   * @param newVolume An integer represents the volume of the new note
    * @throws IllegalArgumentException
    */
-  void edit(Note note, int newStartTime, int newDuration, int newPitch, String newInstrument,
-            int newVolume) throws IllegalArgumentException;
+  void edit(int beat, int pitch, Note note) throws IllegalArgumentException;
 
-  /**
-   * Return the note at given beat time.
-   * @param beat An integer represents the beat time in music
-   * @return A note object with starting time, duration, pitch, instrument and volume
-   * @throws IllegalArgumentException
-   */
-  Note get(int beat) throws IllegalArgumentException;
 
   /**
    * Combine the music model with the given new music model then they can play simultaneously.

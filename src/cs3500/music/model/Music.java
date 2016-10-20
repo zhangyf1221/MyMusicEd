@@ -11,10 +11,10 @@ import java.util.List;
  * Represents a music which is a collection of notes.
  */
 final class Music {
-  TreeMap<Integer, TreeMap<Integer, List<Note>>> music;
+  TreeMap<Integer, TreeMap<Integer, List<Note>>> notes;
 
   Music() {
-    this.music = new TreeMap<>();
+    this.notes = new TreeMap<>();
   }
 //TODO: Constructor
 }

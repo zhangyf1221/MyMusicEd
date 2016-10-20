@@ -16,6 +16,8 @@ public class NoteTest {
     assertEquals("C#0", noteCSharp0.toString());
     Note noteC1 = new Note(0, 8, 12, "", 0);
     assertEquals("C1", noteC1.toString());
+    Note noteB0 = new Note(0, 8, 11, "", 0);
+    assertEquals("B0", noteB0.toString());
     Note noteASharp1 = new Note(0, 8, 22, "", 0);
     assertEquals("A#1", noteASharp1.toString());
   }
