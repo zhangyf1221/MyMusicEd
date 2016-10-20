@@ -10,11 +10,11 @@ import static org.junit.Assert.assertEquals;
 public class MusicModelTest {
   @Test
   public void addTest() throws Exception {
-    MusicModel model = new MusicModel();
+    IMusicModel model = new MusicModel();
+    assertEquals("No note in music", model.print());
     Note note1 = new Note(0, 12, 60, "", 0);
-    assertEquals(false, model.music.notes.containsKey(0));
     model.add(note1);
-    assertEquals(true, model.music.notes.containsKey(0));
+    assertEquals("", model.print());
   }
 
   @Test

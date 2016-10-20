@@ -21,9 +21,7 @@ final public class Note {
     if (duration <= 0) {
       throw new IllegalArgumentException("Duration of a pitch should be greater than 0.");
     }
-    if (pitch < 0) {
-      throw new IllegalArgumentException("Pitch shouldn't be less than 0");
-    }
+
 
     this.startTime = startTime;
     this.duration = duration;

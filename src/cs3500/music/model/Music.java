@@ -16,5 +16,4 @@ final class Music {
   Music() {
     this.notes = new TreeMap<>();
   }
-//TODO: Constructor
 }

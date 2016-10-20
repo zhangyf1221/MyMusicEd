@@ -13,14 +13,14 @@ import java.util.TreeMap;
  */
 public class MusicModel implements IMusicModel{
   //define fields
-  public Music music;
+  private Music music;
   private int duration;
   private int highPitch;
   private int lowPitch;
 
   public MusicModel() {
     this.music = new Music();
-    this.duration = 0;
+    this.duration = -1;
     this.highPitch = 0;
     this.lowPitch = 0;
   }
@@ -29,7 +29,7 @@ public class MusicModel implements IMusicModel{
 
   @Override
   public void add(Note note) throws IllegalArgumentException {
-    if (note.duration + note.startTime > duration) {
+    if (note.duration + note.startTime > this.duration) {
       this.duration = note.duration + note.startTime;
     }
 
@@ -69,8 +69,7 @@ public class MusicModel implements IMusicModel{
   }
 
   @Override
-  public void edit(Note note, int newStartTime, int newDuration, int newPitch,
-                   String newInstrument, int newVolume) throws IllegalArgumentException {
+  public void edit(int beat, int pitch, Note note) {
 
   }
 
@@ -94,20 +93,109 @@ public class MusicModel implements IMusicModel{
 
   }
 
+  private String printPitch(int pitch) {
+    int octave = pitch / 12;
+    int i = pitch % 12;
+    Pitch[] pitches = Pitch.values();
+
+    String result = pitches[i].toString() + octave;
+    int length = result.length();
+    switch (length) {
+      case 2:
+        result = "  " + result + " ";
+        break;
+      case 3:
+        result = " " + result + " ";
+        break;
+      case 4:
+        result = " " + result;
+        break;
+      case 5:
+        result = result;
+        break;
+      default:
+        throw new IllegalArgumentException("Pitch number too large to show");
+    }
+    return result;
+
+  }
+
   @Override
   public String print() {
     String result = "";
-    if (music == null) {
+    if (duration == -1) {
       return "No note in music";
     }
 
-    String space = "";
-    for (int i = 0; i < (int)Math.log10(duration) + 1; i++) {
-      space += " ";
+    int pitchRange = highPitch - lowPitch;
+
+    int[][] cells = new int[duration + 1][pitchRange + 1];
+    for (int i = 0; i < duration + 1; i++) {
+      for (int j = 0; j < pitchRange + 1; j++) {
+        cells[i][j] = 0;
+      }
     }
 
-    //first line
+    for (int i = 0; i < duration + 1; i++) {
+      if (music.notes.containsKey(i)) {
+        TreeMap<Integer, List<Note>> pitches = music.notes.get(i);
+        for (int j = 0; j < pitchRange + 1; j++) {
+          if (pitches.containsKey(j + lowPitch)) {
+            List<Note> lon = pitches.get(j + lowPitch);
+            int maxL = 0;
+            for (int m = 0; m < lon.size(); m++) {
+              int possibleL = lon.get(m).toString().length();
+              maxL = (possibleL > maxL) ? possibleL : maxL;
+            }
+            for (int n = 0; n < maxL; n++) {
+              if (n == 0) {
+                cells[i+n][j] = 2;
+              } else {
+                if (cells[i+n][j] != 2) {
+                  cells[i+n][j] = 1;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    //Printing first label line
+    int digit = String.valueOf(duration).length();
+    for (int i = 0; i < digit; i++) {
+      result += " ";
+    }
+    for (int i = 0; i < pitchRange + 1; i++) {
+      result += printPitch(i + lowPitch);
+    }
+    result += "\n";
 
+    //Printing contents
+    for (int i = 0; i < duration + 1; i++) {
+      int delta = digit - String.valueOf(i).length();
+      for (int s = 0; s < delta; s++) {
+        result += " ";
+      }
+      //beat label
+      result += String.valueOf(i);
+      for (int j = 0; j < pitchRange + 1; j++) {
+        switch(cells[i][j]) {
+          case 0:
+            result += "     ";
+            break;
+          case 1:
+            result += "  |  ";
+            break;
+          case 2:
+            result += "  X  ";
+            break;
+          default:
+            throw new IllegalArgumentException("");
+        }
+      }
+      result += "\n";
+    }
+    return result;
   }
 
 }
