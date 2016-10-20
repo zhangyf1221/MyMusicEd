@@ -149,10 +149,10 @@ public class MusicModel implements IMusicModel{
             }
             for (int n = 0; n < maxL; n++) {
               if (n == 0) {
-                cells[i+n][j] = 2;
+                cells[i + n][j] = 2;
               } else {
-                if (cells[i+n][j] != 2) {
-                  cells[i+n][j] = 1;
+                if (cells[i + n][j] != 2) {
+                  cells[i + n][j] = 1;
                 }
               }
             }
