@@ -78,11 +78,26 @@ public class MusicModel implements IMusicModel{
   /**
    * Return the note at given beat time.
    * @param beat An integer represents the beat time in music
+   * @param pitch An integer represents the pitch of music
    * @return A note object with starting time, duration, pitch, instrument and volume
    * @throws IllegalArgumentException
    */
-  private Note get(int beat) throws IllegalArgumentException {
-    return null;
+  private Note get(int beat, int pitch) throws IllegalArgumentException {
+    if (!music.notes.containsKey(beat) ||
+            !music.notes.get(beat).containsKey(pitch)) {
+      throw new IllegalArgumentException("Cannot find the note");
+    }
+
+    List<Note> lon = music.notes.get(beat).get(pitch);
+
+    if (lon.size() == 1) {
+      return lon.get(0);
+    } else {
+      throw new IllegalArgumentException("");
+    }
+
+
+
   }
 
   @Override
@@ -131,15 +146,15 @@ public class MusicModel implements IMusicModel{
 
     int pitchRange = highPitch - lowPitch;
 
-    int[][] cells = new int[duration + 1][pitchRange + 1];
+    int[][] cells = new int[duration][pitchRange + 1];
 
-    for (int i = 0; i < duration + 1; i++) {
+    for (int i = 0; i < duration; i++) {
       for (int j = 0; j < pitchRange + 1; j++) {
         cells[i][j] = 0;
       }
     }
 
-    for (int i = 0; i < duration - 1; i++) {
+    for (int i = 0; i < duration; i++) {
       if (music.notes.containsKey(i)) {
         TreeMap<Integer, List<Note>> pitches = music.notes.get(i);
         for (int j = 0; j < pitchRange + 1; j++) {
@@ -147,15 +162,15 @@ public class MusicModel implements IMusicModel{
             List<Note> lon = pitches.get(j + lowPitch);
             int maxL = 0;
             for (int m = 0; m < lon.size(); m++) {
-              int possibleL = lon.get(m).toString().length();//getLength()???
+              int possibleL = lon.get(m).duration;//getLength()???
               maxL = (possibleL > maxL) ? possibleL : maxL;
             }
             for (int n = 0; n < maxL; n++) {
               if (n == 0) {
-                cells[i + n][j] = 2;
+                cells[n][j] = 2;
               } else {
-                if (cells[i + n][j] != 2) {
-                  cells[i + n][j] = 1;
+                if (cells[n][j] != 2) {
+                  cells[n][j] = 1;
                 }
               }
             }
@@ -174,7 +189,7 @@ public class MusicModel implements IMusicModel{
     result += "\n";
 
     //Printing contents
-    for (int i = 0; i < duration + 1; i++) {
+    for (int i = 0; i < duration; i++) {
       int delta = digit - String.valueOf(i).length();
       for (int s = 0; s < delta; s++) {
         result += " ";

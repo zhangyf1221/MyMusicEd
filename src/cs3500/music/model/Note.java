@@ -43,4 +43,8 @@ final public class Note {
     return pitches[i].toString() + octave;
   }
 
+  public int getDuration() {
+    return this.duration;
+  }
+
 }
