@@ -5,8 +5,10 @@ package cs3500.music.model;
  */
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 /**
  * Represents the class of the music model.
@@ -66,13 +68,52 @@ public class MusicModel implements IMusicModel{
   }
 
   @Override
-  public void remove(Note note) throws IllegalArgumentException {
+  public void remove(int beat, int pitch) throws IllegalArgumentException {
+    Note note = get(beat, pitch);
+    healperRemove(note);
+  }
 
+  private void healperRemove(Note note) {
+    for (int i = note.startTime; i < note.duration + 1; i++) {
+      TreeMap<Integer, List<Note>> pitches = music.notes.get(i);
+      List<Note> lon = pitches.get(note.pitch);
+      lon.remove(note);
+
+      if (lon.size() == 0) {
+        pitches.remove(note.pitch);
+        if (pitches.size() == 0) {
+          music.notes.remove(i);
+        }
+      }
+    }
+    if (music.notes.isEmpty()) {
+      duration = 0;
+      highPitch = 0;
+      lowPitch = 0;
+    } else {
+      if (note.duration + note.startTime == duration) {
+        this.duration = music.notes.lastKey();
+      }
+      if (note.pitch == highPitch) {
+        List<Integer> pitches = music.notes.values().stream().map(TreeMap<Integer,
+                List<Note>>::lastKey).collect(Collectors.toList());
+        this.highPitch = Collections.max(pitches);
+      } else if (note.pitch == lowPitch) {
+        List<Integer> pitches = music.notes.values().stream().map(TreeMap<Integer,
+                List<Note>>::firstKey).collect(Collectors.toList());
+        this.lowPitch = Collections.min(pitches);
+      }
+    }
   }
 
   @Override
   public void edit(int beat, int pitch, Note note) {
+    if (beat > duration || pitch > highPitch || pitch < lowPitch) {
+      throw new IllegalArgumentException("Cannot find the note");
+    }
 
+    remove(beat, pitch);
+    add(note);
   }
 
   /**
@@ -90,14 +131,7 @@ public class MusicModel implements IMusicModel{
 
     List<Note> lon = music.notes.get(beat).get(pitch);
 
-    if (lon.size() == 1) {
-      return lon.get(0);
-    } else {
-      throw new IllegalArgumentException("");
-    }
-
-
-
+    return lon.get(lon.size() - 1);//TODO: Get the head of note
   }
 
   @Override
@@ -128,7 +162,7 @@ public class MusicModel implements IMusicModel{
         result = " " + result;
         break;
       case 5:
-        result = result;
+        result = "" + result;
         break;
       default:
         throw new IllegalArgumentException("Pitch number too large to show");

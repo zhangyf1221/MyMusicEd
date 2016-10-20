@@ -17,11 +17,12 @@ public interface IMusicModel {
   void add(Note note) throws IllegalArgumentException;
 
   /**
-   * Remove the given note form the music.
-   * @param note A note object with starting time, duration, pitch, instrument and volume
+   * Remove the note form the music by given beat and pitch.
+   * @param beat
+   * @param pitch
    * @throws IllegalArgumentException
    */
-  void remove(Note note) throws IllegalArgumentException;
+  void remove(int beat, int pitch) throws IllegalArgumentException;
 
   /**
    * Edit the given note with given parameters.
