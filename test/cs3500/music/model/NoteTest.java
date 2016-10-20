@@ -22,6 +22,8 @@ public class NoteTest {
     assertEquals("A#1", noteASharp1.toString());
     Note noteNegative = new Note(0, 4, -12, "", 0);
     assertEquals("C-1", noteNegative.toString());
+    Note noteC5 = new Note(4, 4, 60, "", 0);
+    assertEquals("C5", noteC5.toString());
   }
 
 }

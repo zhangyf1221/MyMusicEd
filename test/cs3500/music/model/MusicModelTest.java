@@ -14,6 +14,8 @@ public class MusicModelTest {
     assertEquals("No note in music", model.print());
     Note note1 = new Note(0, 12, 60, "", 0);
     model.add(note1);
+    Note note2 = new Note(1, 12, 66, "", 0);
+    model.add(note2);
     assertEquals("", model.print());
   }
 

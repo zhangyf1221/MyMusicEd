@@ -35,11 +35,13 @@ public class MusicModel implements IMusicModel{
 
     if (note.pitch > highPitch) {
       this.highPitch = note.pitch;
-    }
-
-    if (note.pitch < lowPitch) {
+      if (music.notes.isEmpty()) {
+        this.lowPitch = note.pitch;
+      }
+    } else if (note.pitch < lowPitch) {
       this.lowPitch = note.pitch;
     }
+
 
     for (int i = note.startTime; i < note.startTime + note.duration + 1; i++) {
       TreeMap<Integer, List<Note>> pitches;
@@ -130,13 +132,14 @@ public class MusicModel implements IMusicModel{
     int pitchRange = highPitch - lowPitch;
 
     int[][] cells = new int[duration + 1][pitchRange + 1];
+
     for (int i = 0; i < duration + 1; i++) {
       for (int j = 0; j < pitchRange + 1; j++) {
         cells[i][j] = 0;
       }
     }
 
-    for (int i = 0; i < duration + 1; i++) {
+    for (int i = 0; i < duration - 1; i++) {
       if (music.notes.containsKey(i)) {
         TreeMap<Integer, List<Note>> pitches = music.notes.get(i);
         for (int j = 0; j < pitchRange + 1; j++) {
@@ -144,7 +147,7 @@ public class MusicModel implements IMusicModel{
             List<Note> lon = pitches.get(j + lowPitch);
             int maxL = 0;
             for (int m = 0; m < lon.size(); m++) {
-              int possibleL = lon.get(m).toString().length();
+              int possibleL = lon.get(m).toString().length();//getLength()???
               maxL = (possibleL > maxL) ? possibleL : maxL;
             }
             for (int n = 0; n < maxL; n++) {
@@ -165,8 +168,8 @@ public class MusicModel implements IMusicModel{
     for (int i = 0; i < digit; i++) {
       result += " ";
     }
-    for (int i = 0; i < pitchRange + 1; i++) {
-      result += printPitch(i + lowPitch);
+    for (int i = lowPitch; i < highPitch + 1; i++) {
+      result += printPitch(i);
     }
     result += "\n";
 
