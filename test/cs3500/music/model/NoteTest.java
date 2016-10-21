@@ -24,6 +24,8 @@ public class NoteTest {
     assertEquals("C-1", noteNegative.toString());
     Note noteC5 = new Note(4, 4, 60, "", 0);
     assertEquals("C5", noteC5.toString());
+    Note noteC4 = new Note(4, 4, 48, "", 0);
+    assertEquals("C4", noteC4.toString());
   }
 
 }

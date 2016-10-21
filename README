@@ -1,0 +1,42 @@
+***IMusicModel & MusicModel***
+-MusicModel is the model for the MusicEditor project.
+-It contains 4 fields which are a music object used to store music notes, the duration of the music
+ in beats, the highest pitch in a music and lowest pitch in music.
+-IMusicModel has 7 methods for user to use.
+  1.get(int, int) can return the longest note stored at the music by given beat
+    and pitch. However, the structure of storing notes in music object is 3-dimensional.
+    Giving beat and pitch (2 parameters) can only find the list of notes. There is no way to get
+    a specified note if there are 2 or more in a list(a note overlaps on another).
+
+  2.add(Note) can add a new valid note to the model.
+
+  3.remove(int, int) can remove the longest note stored at the music by given beat and pitch.
+    Same as get, there is no way to specified which note to be removed if the list has 2 or more
+    notes in a same beat and pitch.
+
+  4.edit(int, int, Note) can edit the longest note at the given beat and pitch and replace it with
+    a new Note.
+
+  5.combineSimultaneously(IMusicModel) can combine 2 music pieces together and can be played
+    simultaneously.
+
+  6.combineConsecutively(IMusicModel) can attach a new music piece to the
+    end of origin music piece.
+
+  7.print() can print the music model out in String.
+
+***Pitch***
+-There are 12 pitches in a octave. For the convenience, I combine the octave and the pitch index
+ together. For example, middle-C (C4) is 48th pitch in my music model.
+
+***Note***
+-Note is an object has a starting time which represents which beat it should start to play,
+ the duration of this note which represents how long it should play, the pitch represents the pitch
+ of this note, the instrument represents what kind of instrument should use to play this note and
+ volume represents the volume of this note.
+
+***Music***
+-Music is an object to keep all the notes in it. It can be seen as a 3-dimensional coordinate which
+ x-axis is the beat, y-axis is the pitch and z-axis the note.
+
+
