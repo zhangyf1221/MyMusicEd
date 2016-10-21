@@ -34,6 +34,15 @@ public interface IMusicModel {
 
 
   /**
+   * Return the longest duration note at given beat time.
+   * @param beat  An integer represents the beat time in music
+   * @param pitch An integer represents the pitch of music
+   * @return A note object with starting time, duration, pitch, instrument and volume
+   * @throws IllegalArgumentException
+   */
+  Note get(int beat, int pitch) throws IllegalArgumentException;
+
+  /**
    * Combine the music model with the given new music model then they can play simultaneously.
    * @param model A music model
    */

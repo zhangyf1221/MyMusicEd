@@ -11,7 +11,7 @@ import java.util.TreeMap;
 /**
  * Represents the class of the music model.
  */
-public class MusicModel implements IMusicModel{
+public class MusicModel implements IMusicModel {
   //define fields
   private Music music;
   private int duration;
@@ -24,7 +24,6 @@ public class MusicModel implements IMusicModel{
     this.highPitch = 0;
     this.lowPitch = 0;
   }
-
 
 
   @Override
@@ -43,26 +42,25 @@ public class MusicModel implements IMusicModel{
     }
 
 
-    for (int i = note.startTime; i < note.startTime + note.duration + 1; i++) {
-      TreeMap<Integer, List<Note>> pitches;
-      List<Note> lon;
+    TreeMap<Integer, List<Note>> pitches;
+    List<Note> lon;
 
-      if (music.notes.containsKey(i)) {
-        pitches = music.notes.get(i);
-        if (pitches.containsKey(note.pitch)) {
-          lon = pitches.get(note.pitch);
-        } else {
-          lon = new ArrayList<>();
-        }
+    if (music.notes.containsKey(note.startTime)) {
+      pitches = music.notes.get(note.startTime);
+      if (pitches.containsKey(note.pitch)) {
+        lon = pitches.get(note.pitch);
       } else {
-        pitches = new TreeMap<>();
         lon = new ArrayList<>();
       }
-
-      lon.add(note);
-      pitches.put(note.pitch, lon);
-      music.notes.put(i, pitches);
+    } else {
+      pitches = new TreeMap<>();
+      lon = new ArrayList<>();
     }
+
+    lon.add(note);
+    pitches.put(note.pitch, lon);
+    music.notes.put(note.startTime, pitches);
+
   }
 
   @Override
@@ -76,28 +74,43 @@ public class MusicModel implements IMusicModel{
   }
 
   /**
-   * Return the note at given beat time.
-   * @param beat An integer represents the beat time in music
+   * Return the longest duration note at given beat time.
+   *
+   * @param beat  An integer represents the beat time in music
    * @param pitch An integer represents the pitch of music
    * @return A note object with starting time, duration, pitch, instrument and volume
-   * @throws IllegalArgumentException
    */
-  private Note get(int beat, int pitch) throws IllegalArgumentException {
-    if (!music.notes.containsKey(beat) ||
-            !music.notes.get(beat).containsKey(pitch)) {
-      throw new IllegalArgumentException("Cannot find the note");
+  public Note get(int beat, int pitch) throws IllegalArgumentException {
+    if (beat > duration) {
+      throw new IllegalArgumentException("Given beat is greater than the music's duration");
     }
 
-    List<Note> lon = music.notes.get(beat).get(pitch);
-
-    if (lon.size() == 1) {
-      return lon.get(0);
+    Note target;
+    Integer closestStartBeat = music.notes.floorKey(beat);
+    if (closestStartBeat == null) {
+      throw new IllegalArgumentException("No note at the given beat");
     } else {
-      throw new IllegalArgumentException("");
+      TreeMap<Integer, List<Note>> pitches = music.notes.get(closestStartBeat);
+      if (!pitches.containsKey(pitch)) {
+        throw new IllegalArgumentException("Given pitch is not in the given beat");
+      }
+      List<Note> lon = pitches.get(pitch);
+      int max = lon.get(0).duration;
+      target = lon.get(0);
+      for (int i = 1; i < lon.size() - 1; i++) {
+        Note temp = lon.get(i);
+        int du = temp.duration;
+        if (du > max) {
+          max = du;
+          target = temp;
+        }
+      }
     }
-
-
-
+    if (target.duration + target.startTime < beat) {
+      throw new IllegalArgumentException("No note at the given beat");
+    } else {
+      return target;
+    }
   }
 
   @Override
@@ -128,7 +141,7 @@ public class MusicModel implements IMusicModel{
         result = " " + result;
         break;
       case 5:
-        result = result;
+        result = "" + result;
         break;
       default:
         throw new IllegalArgumentException("Pitch number too large to show");
@@ -162,15 +175,17 @@ public class MusicModel implements IMusicModel{
             List<Note> lon = pitches.get(j + lowPitch);
             int maxL = 0;
             for (int m = 0; m < lon.size(); m++) {
-              int possibleL = lon.get(m).duration;//getLength()???
-              maxL = (possibleL > maxL) ? possibleL : maxL;
+              int possibleL = lon.get(m).duration;
+              if (possibleL > maxL) {
+                maxL = possibleL;
+              }
             }
             for (int n = 0; n < maxL; n++) {
               if (n == 0) {
-                cells[n][j] = 2;
+                cells[n + i][j] = 2;
               } else {
-                if (cells[n][j] != 2) {
-                  cells[n][j] = 1;
+                if (cells[n + i][j] != 2) {
+                  cells[n + i][j] = 1;
                 }
               }
             }
@@ -197,7 +212,7 @@ public class MusicModel implements IMusicModel{
       //beat label
       result += String.valueOf(i);
       for (int j = 0; j < pitchRange + 1; j++) {
-        switch(cells[i][j]) {
+        switch (cells[i][j]) {
           case 0:
             result += "     ";
             break;
@@ -211,7 +226,9 @@ public class MusicModel implements IMusicModel{
             throw new IllegalArgumentException("");
         }
       }
-      result += "\n";
+      if (i != duration - 1) {
+        result += "\n";
+      }
     }
     return result;
   }

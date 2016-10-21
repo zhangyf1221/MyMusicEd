@@ -43,8 +43,13 @@ final public class Note {
     return pitches[i].toString() + octave;
   }
 
-  public int getDuration() {
-    return this.duration;
+  @Override
+  public boolean equals(Object note) {
+    return this.hashCode() == note.hashCode();
   }
 
+  @Override
+  public int hashCode() {
+    return (startTime + 1) * duration * (pitch + 1) * (volume + 1) + instrument.length();
+  }
 }
