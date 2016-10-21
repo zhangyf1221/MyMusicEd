@@ -7,6 +7,8 @@ package cs3500.music.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -72,16 +74,16 @@ public class MusicModel implements IMusicModel {
   }
 
   private void removeHelper(Note note) {
-      TreeMap<Integer, List<Note>> pitches = music.notes.get(note.startTime);
-      List<Note> lon = pitches.get(note.pitch);
-      lon.remove(note);
+    TreeMap<Integer, List<Note>> pitches = music.notes.get(note.startTime);
+    List<Note> lon = pitches.get(note.pitch);
+    lon.remove(note);
 
-      if (lon.isEmpty()) {
-        pitches.remove(note.pitch);
-        if (pitches.isEmpty()) {
-          music.notes.remove(note.startTime);
-        }
+    if (lon.isEmpty()) {
+      pitches.remove(note.pitch);
+      if (pitches.isEmpty()) {
+        music.notes.remove(note.startTime);
       }
+    }
 
     if (music.notes.isEmpty()) {
       duration = -1;
@@ -104,8 +106,13 @@ public class MusicModel implements IMusicModel {
   }
 
   @Override
-  public void edit(int beat, int pitch, Note note) {
+  public void edit(int beat, int pitch, Note newNote) {
+    if (beat > duration || pitch > highPitch || pitch < lowPitch) {
+      throw new IllegalArgumentException("Cannot not find note");
+    }
 
+    remove(beat, pitch);
+    add(newNote);
   }
 
   /**
@@ -150,12 +157,45 @@ public class MusicModel implements IMusicModel {
 
   @Override
   public void combineSimultaneously(IMusicModel model) {
+    MusicModel cast = (MusicModel) model;
+    Music copied = new Music(cast.music);
+    Set<Map.Entry<Integer, TreeMap<Integer, List<Note>>>>
+            beats = copied.notes.entrySet();
 
+    for (Map.Entry<Integer, TreeMap<Integer, List<Note>>> eachBeat : beats) {
+      Set<Map.Entry<Integer, List<Note>>>
+              pitches = eachBeat.getValue().entrySet();
+
+      for (Map.Entry<Integer, List<Note>> eachPitch : pitches) {
+        List<Note> theNotes = eachPitch.getValue();
+
+        theNotes.forEach(this::add);
+      }
+    }
   }
 
   @Override
   public void combineConsecutively(IMusicModel model) {
+    MusicModel cast = (MusicModel) model;
+    Music copied = new Music(cast.music);
+    int originalEndTime = duration;
+    Set<Map.Entry<Integer, TreeMap<Integer, List<Note>>>>
+            beats = copied.notes.entrySet();
 
+    for (Map.Entry<Integer, TreeMap<Integer, List<Note>>> eachBeat : beats) {
+      Set<Map.Entry<Integer, List<Note>>>
+              pitches = eachBeat.getValue().entrySet();
+
+      for (Map.Entry<Integer, List<Note>> eachPitch : pitches) {
+        List<Note> theNotes = eachPitch.getValue();
+
+        for (Note eachNote : theNotes) {
+          eachNote.startTime += originalEndTime;
+          eachNote.endTime += originalEndTime;
+          add(eachNote);
+        }
+      }
+    }
   }
 
   private String printPitch(int pitch) {
@@ -182,7 +222,6 @@ public class MusicModel implements IMusicModel {
         throw new IllegalArgumentException("Pitch number too large to show");
     }
     return result;
-
   }
 
   @Override
@@ -208,14 +247,14 @@ public class MusicModel implements IMusicModel {
         for (int j = 0; j < pitchRange + 1; j++) {
           if (pitches.containsKey(j + lowPitch)) {
             List<Note> lon = pitches.get(j + lowPitch);
-            int maxL = 0;
+            int maxDuration = 0;
             for (int m = 0; m < lon.size(); m++) {
-              int possibleL = lon.get(m).duration;
-              if (possibleL > maxL) {
-                maxL = possibleL;
+              int tempDuration = lon.get(m).duration;
+              if (tempDuration > maxDuration) {
+                maxDuration = tempDuration;
               }
             }
-            for (int n = 0; n < maxL; n++) {
+            for (int n = 0; n < maxDuration; n++) {
               if (n == 0) {
                 cells[n + i][j] = 2;
               } else {

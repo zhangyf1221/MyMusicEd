@@ -13,6 +13,7 @@ final public class Note {
   int pitch;
   String instrument;
   int volume;
+  int endTime;
 
   Note(int startTime, int duration, int pitch, String instrument, int volume) {
     if (startTime < 0) {
@@ -28,6 +29,17 @@ final public class Note {
     this.pitch = pitch;
     this.instrument = instrument;
     this.volume = volume;
+    this.endTime = startTime + duration - 1;
+  }
+
+  //Copy constructor
+  Note(Note note) {
+    this.startTime = note.startTime;
+    this.duration = note.duration;
+    this.pitch = note.pitch;
+    this.instrument = note.instrument;
+    this.volume = note.volume;
+    this.endTime = note.endTime;
   }
 
   /**
