@@ -64,7 +64,7 @@ public class MusicModel implements IMusicModel {
   }
 
   @Override
-  public void remove(Note note) throws IllegalArgumentException {
+  public void remove(int beat, int pitch) throws IllegalArgumentException {
 
   }
 
