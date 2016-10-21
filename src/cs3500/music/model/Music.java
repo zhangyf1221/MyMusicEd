@@ -38,12 +38,9 @@ final class Music {
         List<Note> newNotes = new ArrayList<>();
         int thePitchIdx = eachPitch.getKey();
         List<Note> theNotes = eachPitch.getValue();
-
         newNotes.addAll(theNotes.stream().map(Note::new).collect(Collectors.toList()));
-
         newPitches.put(thePitchIdx, newNotes);
       }
-
       this.notes.put(theBeat, newPitches);
     }
   }

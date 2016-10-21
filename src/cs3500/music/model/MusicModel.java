@@ -275,6 +275,7 @@ public class MusicModel implements IMusicModel {
     for (int i = lowPitch; i < highPitch + 1; i++) {
       result += printPitch(i);
     }
+
     result += "\n";
 
     //Printing contents

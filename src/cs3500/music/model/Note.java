@@ -23,7 +23,6 @@ final public class Note {
       throw new IllegalArgumentException("Duration of a pitch should be greater than 0.");
     }
 
-
     this.startTime = startTime;
     this.duration = duration;
     this.pitch = pitch;
