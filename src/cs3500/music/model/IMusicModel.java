@@ -18,8 +18,8 @@ public interface IMusicModel {
 
   /**
    * Remove the note form the music by given beat and pitch.
-   * @param beat
-   * @param pitch
+   * @param beat An integer represents the time of note need to be removed
+   * @param pitch An integer represents the pitch the note need to be removed
    * @throws IllegalArgumentException if the beat or pitch is invalid
    */
   void remove(int beat, int pitch) throws IllegalArgumentException;
