@@ -22,6 +22,9 @@ public class MusicModel implements IMusicModel {
   private int highPitch;
   private int lowPitch;
 
+  /**
+   * Constructor.
+   */
   public MusicModel() {
     this.music = new Music();
     this.duration = -1;

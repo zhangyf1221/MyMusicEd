@@ -12,7 +12,7 @@ public interface IMusicModel {
   /**
    * Add the given note to the music.
    * @param note A note object with starting time, duration, pitch, instrument and volume
-   * @throws IllegalArgumentException
+   * @throws IllegalArgumentException if the given note is invalid
    */
   void add(Note note) throws IllegalArgumentException;
 
@@ -20,7 +20,7 @@ public interface IMusicModel {
    * Remove the note form the music by given beat and pitch.
    * @param beat
    * @param pitch
-   * @throws IllegalArgumentException
+   * @throws IllegalArgumentException if the beat or pitch is invalid
    */
   void remove(int beat, int pitch) throws IllegalArgumentException;
 
@@ -29,7 +29,7 @@ public interface IMusicModel {
    * @param beat An integer represents the time of note need to be edited
    * @param pitch An integer represents the pitch the note need to be edited
    * @param note A note object with starting time, duration, pitch, instrument and volume
-   * @throws IllegalArgumentException
+   * @throws IllegalArgumentException if the beat, pitch or note is invalid
    */
   void edit(int beat, int pitch, Note note) throws IllegalArgumentException;
 
@@ -39,7 +39,7 @@ public interface IMusicModel {
    * @param beat  An integer represents the beat time in music
    * @param pitch An integer represents the pitch of music
    * @return A note object with starting time, duration, pitch, instrument and volume
-   * @throws IllegalArgumentException
+   * @throws IllegalArgumentException if the beat or pitch is invalid
    */
   Note get(int beat, int pitch) throws IllegalArgumentException;
 

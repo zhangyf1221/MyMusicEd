@@ -18,7 +18,7 @@ public enum Pitch {
   }
 
   /**
-   * Print the pitch in String
+   * Print the pitch in String.
    * @return String represents the pitch
    */
   @Override
