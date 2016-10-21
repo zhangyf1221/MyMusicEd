@@ -5,8 +5,10 @@ package cs3500.music.model;
  */
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 /**
  * Represents the class of the music model.
@@ -65,7 +67,40 @@ public class MusicModel implements IMusicModel {
 
   @Override
   public void remove(int beat, int pitch) throws IllegalArgumentException {
+    Note note = get(beat, pitch);
+    removeHelper(note);
+  }
 
+  private void removeHelper(Note note) {
+      TreeMap<Integer, List<Note>> pitches = music.notes.get(note.startTime);
+      List<Note> lon = pitches.get(note.pitch);
+      lon.remove(note);
+
+      if (lon.isEmpty()) {
+        pitches.remove(note.pitch);
+        if (pitches.isEmpty()) {
+          music.notes.remove(note.startTime);
+        }
+      }
+
+    if (music.notes.isEmpty()) {
+      duration = -1;
+      highPitch = 0;
+      lowPitch = 0;
+    } else {
+      if (note.duration + note.startTime == duration) {
+        this.duration = music.notes.lastKey() + 1;
+      }
+      if (note.pitch == highPitch) {
+        List<Integer> pitches1 = music.notes.values().stream().map(TreeMap<Integer,
+                List<Note>>::lastKey).collect(Collectors.toList());
+        this.highPitch = Collections.max(pitches1);
+      } else if (note.pitch == lowPitch) {
+        List<Integer> pitches2 = music.notes.values().stream().map(TreeMap<Integer,
+                List<Note>>::firstKey).collect(Collectors.toList());
+        this.lowPitch = Collections.min(pitches2);
+      }
+    }
   }
 
   @Override
@@ -106,7 +141,7 @@ public class MusicModel implements IMusicModel {
         }
       }
     }
-    if (target.duration + target.startTime < beat) {
+    if (target.duration + target.startTime - 1 < beat) {
       throw new IllegalArgumentException("No note at the given beat");
     } else {
       return target;
