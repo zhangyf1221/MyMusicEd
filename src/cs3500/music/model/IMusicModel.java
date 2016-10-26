@@ -1,65 +1,47 @@
 package cs3500.music.model;
 
-/**
- * Created by GentleFan on 10/17/2016.
- */
 
 /**
- * Represents an interface of the music model.
+ * The interface of the music model.
+ * It has the simple ability to add, remove, edit the notes and can print the console view of the
+ * piece of music. Could be extended in the future.
  */
 public interface IMusicModel {
+  /**
+   * Add a specific note to the music piece.
+   *
+   * @param n The note you want to add in.
+   */
+  void addNote(Note n);
 
   /**
-   * Add the given note to the music.
-   * @param note A note object with starting time, duration, pitch, instrument and volume
-   * @throws IllegalArgumentException if the given note is invalid
+   * Remove a note has a specific pitch and octave that lies on the nearest beat of the input
+   * time (less or equal). Sure, the input time should be in the note's duration rage. And if
+   * There exists the multiple notes, remove the first added one.
+   *
+   * @param time   The beat you choose.
+   * @param p      The pitch of the note.
+   * @param octave The octave of the note.
+   * @return The removed note.
    */
-  void add(Note note) throws IllegalArgumentException;
+  Note removeNote(int time, PitchName p, int octave); // Always remove the last added one
 
   /**
-   * Remove the note form the music by given beat and pitch.
-   * @param beat An integer represents the time of note need to be removed
-   * @param pitch An integer represents the pitch the note need to be removed
-   * @throws IllegalArgumentException if the beat or pitch is invalid
+   * Print the view of the whole music piece to a String.
+   *
+   * @return The view of the whole music piece.
    */
-  void remove(int beat, int pitch) throws IllegalArgumentException;
+  String printView();
 
   /**
-   * Edit the given note with given parameters.
-   * @param beat An integer represents the time of note need to be edited
-   * @param pitch An integer represents the pitch the note need to be edited
-   * @param note A note object with starting time, duration, pitch, instrument and volume
-   * @throws IllegalArgumentException if the beat, pitch or note is invalid
+   * Remove a note and add a new one into it.
+   *
+   * @param time   The beat you choose.
+   * @param p      The pitch of the note.
+   * @param octave The octave of the note.
+   * @param n      The new note you want to add.
    */
-  void edit(int beat, int pitch, Note note) throws IllegalArgumentException;
-
-
-  /**
-   * Return the longest duration note at given beat time.
-   * @param beat  An integer represents the beat time in music
-   * @param pitch An integer represents the pitch of music
-   * @return A note object with starting time, duration, pitch, instrument and volume
-   * @throws IllegalArgumentException if the beat or pitch is invalid
-   */
-  Note get(int beat, int pitch) throws IllegalArgumentException;
-
-  /**
-   * Combine the music model with the given new music model then they can play simultaneously.
-   * @param model A music model
-   */
-  void combineSimultaneously(IMusicModel model);
-
-  /**
-   * Combine the music model with the given new music model then they can play consecutively.
-   * @param model A music model
-   */
-  void combineConsecutively(IMusicModel model);
-
-  /**
-   * Print the music in String.
-   * @return String represents the music model
-   */
-  String print();
+  void editNote(int time, PitchName p, int octave, Note n);
 
 
 }

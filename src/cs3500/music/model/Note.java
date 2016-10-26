@@ -1,66 +1,125 @@
 package cs3500.music.model;
 
-/**
- * Created by GentleFan on 10/17/2016.
- */
+
+import java.util.Objects;
 
 /**
- * Represents a note with given parameters.
+ * A class represents a single note, which contains pitchName, octave, startTime and length.
+ * Also, volume and timbre may be added into future design.
  */
-final public class Note {
-  int startTime;
-  int duration;
-  int pitch;
-  String instrument;
-  int volume;
-  int endTime;
 
-  public Note(int startTime, int duration, int pitch, String instrument, int volume) {
+public class Note {
+  private final PitchName pitchName;
+  private final int octave;
+  private final int startTime;
+  private final int length;
+
+  /**
+   * The constructor of Note.
+   *
+   * @param pitchName It's the pitchName of the note (i.e. C, Cs, ...)
+   * @param octave    It's the octave the note lies in.
+   * @param startTime It's the start time of a note.
+   * @param length    It's the full length of a note.
+   */
+  public Note(PitchName pitchName, int octave, int startTime, int length) {
     if (startTime < 0) {
-      throw new IllegalArgumentException("Starting time should be greater than or equal to 0.");
+      throw new IllegalArgumentException("The start time should not be negative!");
     }
-    if (duration <= 0) {
-      throw new IllegalArgumentException("Duration of a pitch should be greater than 0.");
+    if (length <= 0) {
+      throw new IllegalArgumentException("The duration should be positive!");
     }
-
+    if (octave > 99 || octave <= -9) {
+      throw new IllegalArgumentException("Not a valid octave range!");
+    }
+    this.pitchName = pitchName;
+    this.octave = octave;
     this.startTime = startTime;
-    this.duration = duration;
-    this.pitch = pitch;
-    this.instrument = instrument;
-    this.volume = volume;
-    this.endTime = startTime + duration - 1;
-  }
-
-  //Copy constructor
-  Note(Note note) {
-    this.startTime = note.startTime;
-    this.duration = note.duration;
-    this.pitch = note.pitch;
-    this.instrument = note.instrument;
-    this.volume = note.volume;
-    this.endTime = note.endTime;
+    this.length = length;
   }
 
   /**
-   * Prints the note in String.
-   * @return the pitch and octave of a note in String
+   * Get a deep copy of the note.
+   *
+   * @return The exact deep copy of the note.
    */
-  @Override
-  public String toString() {
-    int octave = pitch / 12;
-    int i = pitch % 12;
-    Pitch[] pitches = Pitch.values();
-
-    return pitches[i].toString() + octave;
+  public Note getACopy() {
+    return new Note(this.pitchName, this.octave, this.startTime, this.length);
   }
 
+
+  /**
+   * Get the start time of the note.
+   *
+   * @return The start time of the note.
+   */
+  public int getStartTime() {
+    return startTime;
+  }
+
+  /**
+   * Get the total length of the note.
+   *
+   * @return The total length of the note.
+   */
+  public int getLength() {
+    return length;
+  }
+
+  /**
+   * Get the pitchName of the note.
+   *
+   * @return The pitchName of the note.
+   */
+  public PitchName getPitchName() {
+    return pitchName;
+  }
+
+  /**
+   * Get the end time of the note.
+   *
+   * @return The end time of the note.
+   */
+  public int getEndTime() {
+    return startTime + length - 1;
+  }
+
+  /**
+   * Get the octave of the note.
+   *
+   * @return The octave of the note.
+   */
+  public int getOctave() {
+    return octave;
+  }
+
+  /**
+   * Get the note code.
+   *
+   * @return The note code(i.e. octave * 12 + pitchCode( 0, 1, ..., 11)) of the note.
+   */
+  public int getNoteCode() {
+    return octave * 12 + pitchName.toInt();
+  }
+
+  /**
+   * Judge 2 notes are equal or not.
+   *
+   * @param n Another note.
+   * @return True if they are equal and vice versa.
+   */
   @Override
-  public boolean equals(Object note) {
-    return this.hashCode() == note.hashCode();
+  public boolean equals(Object n) {
+    if (n instanceof Note) {
+      Note ob = (Note)n;
+      return (this.pitchName == ob.pitchName) && (this.length == ob.length)
+              && (this.octave == ob.octave) && (this.startTime == ob.startTime);
+    }
+    return false;
   }
 
   @Override
   public int hashCode() {
-    return (startTime + 1) * duration * (pitch + 1) * (volume + 1) + instrument.length();
+    return Objects.hashCode(this);
   }
 }
