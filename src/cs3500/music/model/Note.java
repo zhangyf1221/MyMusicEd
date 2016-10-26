@@ -15,7 +15,7 @@ final public class Note {
   int volume;
   int endTime;
 
-  Note(int startTime, int duration, int pitch, String instrument, int volume) {
+  public Note(int startTime, int duration, int pitch, String instrument, int volume) {
     if (startTime < 0) {
       throw new IllegalArgumentException("Starting time should be greater than or equal to 0.");
     }
