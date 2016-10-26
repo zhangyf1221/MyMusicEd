@@ -1,6 +1,10 @@
-package cs3500.music.model;
+package cs3500.music.tests;
 
 import org.junit.Test;
+
+import cs3500.music.model.IMusicModel;
+import cs3500.music.model.MusicModel;
+import cs3500.music.model.Note;
 
 import static org.junit.Assert.assertEquals;
 
